@@ -1,127 +1,1269 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>GATE Prep Tracker</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GATE Prep Tracker 2027</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg-primary: #fdfcfb;
+      --bg-secondary: #f8f7ff;
+      --bg-card: #ffffff;
+      --text-primary: #1a1a2e;
+      --text-secondary: #6b7280;
+      --text-muted: #9ca3af;
+      --accent-primary: #8b5cf6;
+      --accent-secondary: #ec4899;
+      --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --border: rgba(0, 0, 0, 0.06);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0f0f1e;
+      --bg-secondary: #1a1a2e;
+      --bg-card: #16213e;
+      --text-primary: #e8eaed;
+      --text-secondary: #b4b9c5;
+      --text-muted: #8b92a8;
+      --border: rgba(255, 255, 255, 0.08);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: var(--transition);
+    }
+
+    .gradient-bg {
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      min-height: 100vh;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+      overflow: hidden;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 500;
+      transition: var(--transition);
+      cursor: pointer;
+      border: none;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background: var(--accent-gradient);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-card);
+    }
+
+    .status-badge {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      text-transform: capitalize;
+    }
+
+    .status-todo {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-inprogress {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .status-done {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    [data-theme="dark"] .status-todo {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+    }
+
+    [data-theme="dark"] .status-inprogress {
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+    }
+
+    [data-theme="dark"] .status-done {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent-gradient);
+      border-radius: 10px;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+      }
+
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .animate-slide-in {
+      animation: slideIn 0.3s ease-out forwards;
+    }
+
+    .collapsible-header {
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      transition: var(--transition);
+    }
+
+    .collapsible-header:hover {
+      background: var(--bg-secondary);
+    }
+
+    .collapsible-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .collapsible-content.open {
+      max-height: 2000px;
+    }
+
+    .chevron {
+      transition: transform 0.3s ease;
+    }
+
+    .chevron.rotate {
+      transform: rotate(180deg);
+    }
+
+    .settings-drawer {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 400px;
+      height: 100vh;
+      background: var(--bg-card);
+      box-shadow: -4px 0 32px rgba(0, 0, 0, 0.2);
+      transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .settings-drawer.open {
+      right: 0;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 999;
+    }
+
+    .overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 24px;
+    }
+
+    .stat-number {
+      font-size: 36px;
+      font-weight: 700;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .floating-task-widget {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 350px;
+      max-height: 400px;
+      overflow-y: auto;
+      z-index: 100;
+      transition: var(--transition);
+    }
+
+    .floating-task-widget.minimized {
+      max-height: 60px;
+      overflow: hidden;
+    }
+
+    input,
+    textarea {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 10px 14px;
+      border-radius: 8px;
+      transition: var(--transition);
+      width: 100%;
+      font-size: 14px;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    }
+
+    .loading {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @media (max-width: 768px) {
+      .floating-task-widget {
+        width: calc(100% - 32px);
+        right: 16px;
+        left: 16px;
+      }
+
+      .settings-drawer {
+        width: 100%;
+        right: -100%;
+      }
+    }
+
+    .streak-card img {
+      border-radius: 12px;
+      width: 100%;
+      height: auto;
+    }
+
+    .section-header {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-primary) var(--bg-secondary);
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-primary);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-secondary);
+    }
+  </style>
 </head>
-<body class="min-h-screen p-6">
-  <div class="max-w-6xl mx-auto">
-    <header class="flex items-center justify-between mb-6">
-      <div>
-        <h1 class="text-3xl font-semibold">GATE Prep Tracker</h1>
-        <p class="muted">Google Sheets backend → Beautiful dashboard (free tools).</p>
-      </div>
-      <div class="text-right muted">
+
+<body>
+  <div class="gradient-bg">
+    <!-- Overlay for settings drawer -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 py-6 md:px-6 md:py-8">
+
+      <!-- Header -->
+      <header class="flex items-center justify-between mb-8 animate-fade-in">
+        <div>
+          <h1 class="text-3xl md:text-4xl font-bold mb-2">GATE Prep Tracker</h1>
+          <p style="color: var(--text-secondary); font-size: 14px;">Your journey to GATE 2027 success 🎯</p>
+        </div>
         <div class="flex items-center gap-3">
-          <button id="themeToggle" class="px-3 py-1 rounded border">Toggle theme</button>
+          <button id="themeToggle" class="btn btn-secondary" title="Toggle theme">
+            <span id="themeIcon">🌙</span>
+          </button>
+          <button id="settingsBtn" class="btn btn-secondary" title="Settings">
+            ⚙️
+          </button>
+        </div>
+      </header>
+
+      <!-- Motivation Card -->
+      <div class="card p-6 mb-6 text-center animate-fade-in" style="animation-delay: 0.1s;">
+        <h2 class="text-xl font-semibold mb-2" style="color: var(--text-primary);">💪 Daily Motivation</h2>
+        <p id="motivationText" style="color: var(--text-secondary); font-size: 16px; font-style: italic;"></p>
+      </div>
+
+      <!-- Stats Overview -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="card stat-card animate-fade-in" style="animation-delay: 0.2s;">
+          <div
+            style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+            Total Topics</div>
+          <div class="stat-number" id="statTotal">0</div>
+        </div>
+        <div class="card stat-card animate-fade-in" style="animation-delay: 0.25s;">
+          <div
+            style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+            Completed</div>
+          <div class="stat-number" id="statDone">0</div>
+        </div>
+        <div class="card stat-card animate-fade-in" style="animation-delay: 0.3s;">
+          <div
+            style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+            In Progress</div>
+          <div class="stat-number" id="statProgress">0</div>
+        </div>
+        <div class="card stat-card animate-fade-in" style="animation-delay: 0.35s;">
+          <div
+            style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+            Progress</div>
+          <div class="stat-number" id="statPercent">0%</div>
         </div>
       </div>
-    </header>
 
-    <!-- Daily Motivation -->
-    <div class="card p-4 rounded-lg mb-6 text-center fade-in">
-      <h2 class="text-xl font-semibold mb-1">Daily Motivation</h2>
-      <p id="motivationText" class="text-lg"></p>
+      <!-- Charts Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div class="card p-6 animate-fade-in" style="animation-delay: 0.4s;">
+          <h3 class="section-header">📊 Subject Distribution</h3>
+          <canvas id="pieChart" height="250"></canvas>
+        </div>
+        <div class="card p-6 lg:col-span-2 animate-fade-in" style="animation-delay: 0.45s;">
+          <h3 class="section-header">📈 Progress by Subject</h3>
+          <canvas id="barChart" height="250"></canvas>
+        </div>
+      </div>
+
+      <!-- Subjects Progress -->
+      <div class="card mb-6 animate-fade-in" style="animation-delay: 0.5s;">
+        <div class="collapsible-header" onclick="toggleCollapsible('subjectsSection')">
+          <h3 class="section-header" style="margin: 0;">📚 Subjects Progress</h3>
+          <span class="chevron" id="subjectsSectionChevron">▼</span>
+        </div>
+        <div class="collapsible-content open" id="subjectsSection">
+          <div id="subjectsList" class="p-6 space-y-4"></div>
+        </div>
+      </div>
+
+      <!-- Coding Streaks -->
+      <div class="card mb-6 animate-fade-in" style="animation-delay: 0.55s;">
+        <div class="collapsible-header" onclick="toggleCollapsible('streaksSection')">
+          <h3 class="section-header" style="margin: 0;">🔥 Coding Streaks</h3>
+          <span class="chevron" id="streaksSectionChevron">▼</span>
+        </div>
+        <div class="collapsible-content open" id="streaksSection">
+          <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="streak-card">
+              <h4 style="color: var(--text-secondary); margin-bottom: 12px; font-weight: 600;">GitHub Contributions</h4>
+              <img id="githubStreakImg" alt="GitHub streak" style="min-height: 150px; background: var(--bg-secondary);">
+            </div>
+            <div class="streak-card">
+              <h4 style="color: var(--text-secondary); margin-bottom: 12px; font-weight: 600;">LeetCode Stats</h4>
+              <img id="leetcodeStatsImg" alt="LeetCode stats"
+                style="min-height: 150px; background: var(--bg-secondary);">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Weekly Progress -->
+      <div class="card p-6 mb-6 animate-fade-in" style="animation-delay: 0.6s;">
+        <h3 class="section-header">📅 Weekly Progress</h3>
+        <canvas id="weeklyChart" height="120"></canvas>
+      </div>
+
+      <!-- Tasks Table -->
+      <div class="card mb-6 animate-fade-in" style="animation-delay: 0.65s;">
+        <div class="collapsible-header" onclick="toggleCollapsible('tasksSection')">
+          <div>
+            <h3 class="section-header" style="margin: 0;">📋 All Tasks</h3>
+            <p style="color: var(--text-muted); font-size: 12px;">Click status to toggle: Todo → In Progress → Done</p>
+          </div>
+          <span class="chevron" id="tasksSectionChevron">▼</span>
+        </div>
+        <div class="collapsible-content open" id="tasksSection">
+          <div class="overflow-x-auto">
+            <table class="w-full" style="border-collapse: collapse;">
+              <thead style="background: var(--bg-secondary); border-bottom: 2px solid var(--border);">
+                <tr>
+                  <th
+                    style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary); font-size: 12px; text-transform: uppercase;">
+                    Subject</th>
+                  <th
+                    style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary); font-size: 12px; text-transform: uppercase;">
+                    Topic</th>
+                  <th
+                    style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary); font-size: 12px; text-transform: uppercase;">
+                    Status</th>
+                  <th
+                    style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary); font-size: 12px; text-transform: uppercase;">
+                    Planned</th>
+                  <th
+                    style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary); font-size: 12px; text-transform: uppercase;">
+                    Hours</th>
+                  <th
+                    style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-secondary); font-size: 12px; text-transform: uppercase;">
+                    Notes</th>
+                </tr>
+              </thead>
+              <tbody id="tasksTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="text-center mt-8" style="color: var(--text-muted); font-size: 14px;">
+        <p>Made with ❤️ for GATE 2027 aspirants • Free & Open Source</p>
+      </footer>
     </div>
 
-    <!-- Setup -->
-    <section class="card p-4 rounded-lg mb-6 fade-in-up">
-      <h2 class="text-lg font-medium">Quick Setup</h2>
-      <ol class="mt-2 muted text-sm list-decimal list-inside space-y-1">
-        <li>Create a Google Sheet and add columns: <code>Subject,Topic,Status,PlannedDate,EstimatedHours,Notes</code>.</li>
-        <li>Open <strong>Extensions → Apps Script</strong> and paste the Apps Script file <code>apps_script.gs</code>.</li>
-        <li>Deploy the Apps Script as a web app: <em>Execute as: Me</em>, <em>Who has access: Anyone, even anonymous</em>. Copy the URL.</li>
-        <li>Paste that URL into the <strong>AppsScript endpoint</strong> field below and click <em>Save endpoint</em>.</li>
-        <li>Publish the sheet to CSV (optional): File → Publish to web → choose sheet → CSV → copy link.</li>
-        <li>Deploy this site to GitHub Pages (see README).</li>
-      </ol>
-      <div class="mt-3">
-        <label class="muted text-sm">AppsScript endpoint (web app URL)</label>
-        <input id="appsUrl" class="w-full p-2 mt-2 rounded bg-transparent border" placeholder="https://script.google.com/macros/s/XXX/exec">
-        <div class="flex mt-3 gap-2">
-          <button id="saveEndpoint" class="px-3 py-2 rounded bg-indigo-600">Save endpoint</button>
-          <button id="testEndpoint" class="px-3 py-2 rounded bg-blue-600">Test endpoint</button>
-          <button id="useCsvFallback" class="px-3 py-2 rounded bg-gray-600">Use CSV fallback</button>
-        </div>
+    <!-- Floating Today's Tasks Widget -->
+    <div class="floating-task-widget card animate-slide-in" id="taskWidget">
+      <div class="collapsible-header" onclick="toggleTaskWidget()"
+        style="padding: 16px; background: var(--accent-gradient); color: white; border-radius: 16px 16px 0 0;">
+        <h3 style="font-weight: 700; font-size: 16px; margin: 0;">📌 Today's Tasks</h3>
+        <span class="chevron" id="taskWidgetChevron" style="color: white;">▼</span>
       </div>
-    </section>
+      <div id="taskWidgetContent" class="p-4 space-y-3"></div>
+    </div>
 
-    <!-- Streaks -->
-    <section class="card p-4 rounded-lg mb-6 fade-in">
-      <h2 class="text-xl font-medium mb-3">Coding Streaks & Stats</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <h3 class="font-medium mb-2">GitHub Streak</h3>
-          <img id="githubStreakImg" class="rounded shadow" alt="GitHub streak"/>
-          <div class="mt-2 muted text-sm">Set GitHub username below.</div>
+    <!-- Settings Drawer -->
+    <div class="settings-drawer" id="settingsDrawer">
+      <div class="p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold">⚙️ Settings</h2>
+          <button onclick="closeSettings()" class="btn btn-secondary">✕</button>
         </div>
-        <div>
-          <h3 class="font-medium mb-2">LeetCode Card</h3>
-          <img id="leetcodeStatsImg" class="rounded shadow" alt="LeetCode stats"/>
-          <div class="mt-2 muted text-sm">Set LeetCode username below.</div>
-        </div>
-      </div>
-      <div class="mt-4">
-        <button id="setUsernames" class="px-3 py-2 rounded bg-indigo-500">Set GitHub / LeetCode usernames</button>
-      </div>
-    </section>
 
-    <!-- Main dashboard -->
-    <section class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <div class="card p-4 rounded-lg fade-in">
-        <h3 class="font-medium">Today's Tasks</h3>
-        <div id="todayTasks" class="mt-3 space-y-2"></div>
-      </div>
-
-      <div class="card p-4 rounded-lg lg:col-span-2 fade-in">
-        <div class="flex items-center justify-between">
-          <h3 class="font-medium">Overview</h3>
-          <div class="muted text-sm">Live sync via Apps Script (if configured)</div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-          <div>
-            <canvas id="pieChart" height="180"></canvas>
+        <!-- Apps Script Configuration -->
+        <div class="mb-6">
+          <h3 class="font-semibold mb-3" style="color: var(--text-primary);">🔗 Backend Configuration</h3>
+          <label style="color: var(--text-secondary); font-size: 14px; display: block; margin-bottom: 8px;">Apps Script
+            URL</label>
+          <input type="text" id="appsUrl" placeholder="https://script.google.com/macros/s/.../exec">
+          <div class="flex gap-2 mt-3">
+            <button id="saveEndpoint" class="btn btn-primary flex-1">Save</button>
+            <button id="testEndpoint" class="btn btn-secondary flex-1">Test</button>
           </div>
-          <div class="md:col-span-2">
-            <canvas id="lineChart" height="180"></canvas>
+          <p style="color: var(--text-muted); font-size: 12px; margin-top: 8px;">Deploy your Google Apps Script as a web
+            app and paste the URL here.</p>
+        </div>
+
+        <!-- Username Configuration -->
+        <div class="mb-6">
+          <h3 class="font-semibold mb-3" style="color: var(--text-primary);">👤 Profile Settings</h3>
+          <label style="color: var(--text-secondary); font-size: 14px; display: block; margin-bottom: 8px;">GitHub
+            Username</label>
+          <input type="text" id="githubUsername" placeholder="yourusername">
+          <label
+            style="color: var(--text-secondary); font-size: 14px; display: block; margin-bottom: 8px; margin-top: 12px;">LeetCode
+            Username</label>
+          <input type="text" id="leetcodeUsername" placeholder="yourusername">
+          <button id="saveUsernames" class="btn btn-primary w-full mt-3">Save Usernames</button>
+        </div>
+
+        <!-- CSV Fallback -->
+        <div class="mb-6">
+          <h3 class="font-semibold mb-3" style="color: var(--text-primary);">📄 CSV Fallback</h3>
+          <label style="color: var(--text-secondary); font-size: 14px; display: block; margin-bottom: 8px;">Published
+            CSV URL</label>
+          <input type="text" id="csvUrl" placeholder="https://docs.google.com/spreadsheets/.../pub?output=csv">
+          <button id="loadCsv" class="btn btn-primary w-full mt-3">Load from CSV</button>
+        </div>
+
+        <!-- Data Management -->
+        <div class="mb-6">
+          <h3 class="font-semibold mb-3" style="color: var(--text-primary);">💾 Data Management</h3>
+          <div class="flex gap-2">
+            <button id="downloadCsv" class="btn btn-secondary flex-1">Download CSV</button>
+            <button id="resetBtn" class="btn btn-secondary flex-1">Reset Data</button>
           </div>
         </div>
 
-        <div class="mt-4">
-          <h4 class="font-medium">Weekly Progress</h4>
-          <canvas id="weeklyChart" height="120"></canvas>
+        <!-- Instructions -->
+        <div class="card p-4" style="background: var(--bg-secondary);">
+          <h4 class="font-semibold mb-2" style="font-size: 14px;">📖 Quick Setup Guide</h4>
+          <ol style="color: var(--text-secondary); font-size: 12px; padding-left: 20px; line-height: 1.8;">
+            <li>Create a Google Sheet with columns: Subject, Topic, Status, PlannedDate, EstimatedHours, Notes</li>
+            <li>Go to Extensions → Apps Script</li>
+            <li>Paste the provided Apps Script code</li>
+            <li>Deploy as Web App (Execute as: Me, Access: Anyone)</li>
+            <li>Copy the web app URL and paste it above</li>
+          </ol>
         </div>
       </div>
-    </section>
-
-    <!-- Tasks table -->
-    <section class="card p-4 rounded-lg mt-6 fade-in-up">
-      <div class="flex items-center justify-between">
-        <h3 class="font-medium">Tasks / Topics</h3>
-        <div class="muted text-sm">Click status to toggle → todo → inprogress → done</div>
-      </div>
-      <div class="mt-3 overflow-auto max-h-96">
-        <table class="w-full text-left text-sm">
-          <thead class="muted text-xs uppercase">
-            <tr><th class="p-2">Subject</th><th>Topic</th><th>Status</th><th>Planned</th><th>Est Hrs</th><th>Notes</th></tr>
-          </thead>
-          <tbody id="tasksTable"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="card p-4 rounded-lg mt-6">
-      <h3 class="font-medium">Apps Script (apps_script.gs)</h3>
-      <pre class="text-sm muted p-3 rounded bg-panel"><code id="appsPreview">// see apps_script.gs in repo</code></pre>
-    </section>
-
-    <footer class="mt-8 muted text-xs">Made for GATE 2027 planning • Uses free Google account + GitHub Pages. No paid services required.</footer>
+    </div>
   </div>
 
-<script src="script.js"></script>
+  <script>
+    // =========================
+    // Configuration & State
+    // =========================
+    let APPS_ENDPOINT = localStorage.getItem('gate_apps_endpoint') || '';
+    let rawData = [];
+    let data = [];
+    let charts = {};
+
+    // =========================
+    // Initialization
+    // =========================
+    document.addEventListener('DOMContentLoaded', () => {
+      applyTheme();
+      loadMotivation();
+      loadStreaks();
+      loadSavedEndpoint();
+      loadLocalData();
+      initializeEventListeners();
+    });
+
+    // =========================
+    // Theme Management
+    // =========================
+    function applyTheme() {
+      const theme = localStorage.getItem('gate_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+      document.getElementById('themeIcon').textContent = theme === 'dark' ? '🌙' : '☀️';
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('gate_theme', next);
+      document.getElementById('themeIcon').textContent = next === 'dark' ? '🌙' : '☀️';
+    }
+
+    // =========================
+    // Motivation & Streaks
+    // =========================
+    const quotes = [
+      "Small steps daily lead to massive results.",
+      "Stay consistent, your future self is watching.",
+      "One hour today beats zero hours forever.",
+      "Champions are built on regular boring practice.",
+      "If you study today, tomorrow will thank you.",
+      "Don't stop until you are proud.",
+      "Your only competition is yesterday's you.",
+      "Deep focus beats long hours.",
+      "Greatness is consistency.",
+      "You don't need to be extreme, just consistent."
+    ];
+
+    function loadMotivation() {
+      const quote = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById('motivationText').textContent = quote;
+    }
+
+    function loadStreaks() {
+      const gh = localStorage.getItem('username_github') || '';
+      const lc = localStorage.getItem('username_leetcode') || '';
+
+      const githubImg = document.getElementById('githubStreakImg');
+      const leetcodeImg = document.getElementById('leetcodeStatsImg');
+
+      if (gh) {
+        githubImg.src = `https://streak-stats.demolab.com?user=${gh}&theme=dark&hide_border=true`;
+        githubImg.style.display = 'block';
+      } else {
+        githubImg.style.display = 'none';
+      }
+
+      if (lc) {
+        leetcodeImg.src = `https://leetcard.jacoblin.cool/${lc}?theme=dark&border=0`;
+        leetcodeImg.style.display = 'block';
+      } else {
+        leetcodeImg.style.display = 'none';
+      }
+    }
+
+    // =========================
+    // Data Management
+    // =========================
+    function saveLocal(data) {
+      try {
+        localStorage.setItem('gate_tracker_data', JSON.stringify(data));
+      } catch (e) {
+        console.error('Failed to save data:', e);
+      }
+    }
+
+    function loadLocal() {
+      try {
+        const stored = localStorage.getItem('gate_tracker_data');
+        return stored ? JSON.parse(stored) : null;
+      } catch (e) {
+        console.error('Failed to load data:', e);
+        return null;
+      }
+    }
+
+    function loadLocalData() {
+      const local = loadLocal();
+      if (local && local.length > 0) {
+        rawData = local.slice();
+        data = rawData.slice();
+        refreshUI();
+      }
+    }
+
+    function parseCSV(csvText) {
+      try {
+        const lines = csvText.trim().split('\n');
+        const headers = lines[0].split(',').map(h => h.trim());
+        return lines.slice(1).map(line => {
+          const parts = line.match(/("[^"]*"|[^,]+)/g) || [];
+          const obj = {};
+          headers.forEach((h, i) => {
+            obj[h] = (parts[i] || '').replace(/^"|"$/g, '').trim();
+          });
+          return obj;
+        });
+      } catch (e) {
+        console.error('CSV parsing error:', e);
+        return [];
+      }
+    }
+
+    // =========================
+    // Data Computation
+    // =========================
+    function computeStats(data) {
+      const stats = {
+        total: data.length,
+        done: 0,
+        inprogress: 0,
+        todo: 0
+      };
+
+      data.forEach(item => {
+        const status = (item.Status || 'todo').toLowerCase();
+        if (status === 'done') stats.done++;
+        else if (status === 'inprogress') stats.inprogress++;
+        else stats.todo++;
+      });
+
+      stats.percent = stats.total > 0 ? Math.round((stats.done / stats.total) * 100) : 0;
+      return stats;
+    }
+
+    function computeSubjects(data) {
+      const map = {};
+      data.forEach(item => {
+        const subject = item.Subject || 'Misc';
+        if (!map[subject]) {
+          map[subject] = { total: 0, done: 0, inprogress: 0, todo: 0, items: [] };
+        }
+        map[subject].total++;
+        const status = (item.Status || 'todo').toLowerCase();
+        if (status === 'done') map[subject].done++;
+        else if (status === 'inprogress') map[subject].inprogress++;
+        else map[subject].todo++;
+        map[subject].items.push(item);
+      });
+      return map;
+    }
+
+    function getTodaysTasks() {
+      const today = new Date().toISOString().slice(0, 10);
+      return data.filter(item => {
+        const plannedDate = (item.PlannedDate || '').slice(0, 10);
+        const status = (item.Status || '').toLowerCase();
+        return plannedDate === today || (status !== 'done' && !item.PlannedDate);
+      });
+    }
+
+    // =========================
+    // UI Rendering
+    // =========================
+    function refreshUI() {
+      const stats = computeStats(data);
+      const subjects = computeSubjects(data);
+
+      renderStats(stats);
+      renderSubjects(subjects);
+      renderTasksTable();
+      renderCharts(subjects);
+      renderTodaysTasks();
+    }
+
+    function renderStats(stats) {
+      document.getElementById('statTotal').textContent = stats.total;
+      document.getElementById('statDone').textContent = stats.done;
+      document.getElementById('statProgress').textContent = stats.inprogress;
+      document.getElementById('statPercent').textContent = stats.percent + '%';
+    }
+
+    function renderSubjects(subjects) {
+      const container = document.getElementById('subjectsList');
+      container.innerHTML = '';
+
+      Object.keys(subjects).sort().forEach(subjectName => {
+        const sub = subjects[subjectName];
+        const percent = sub.total > 0 ? Math.round((sub.done / sub.total) * 100) : 0;
+
+        const div = document.createElement('div');
+        div.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+            <div style="flex: 1;">
+              <div style="font-weight: 600; font-size: 16px; margin-bottom: 4px;">${subjectName}</div>
+              <div style="color: var(--text-muted); font-size: 12px;">${sub.done} / ${sub.total} completed • ${sub.inprogress} in progress</div>
+            </div>
+            <div style="flex: 1; max-width: 200px;">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${percent}%;"></div>
+              </div>
+              <div style="color: var(--text-muted); font-size: 12px; text-align: right; margin-top: 4px;">${percent}%</div>
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderTasksTable() {
+      const tbody = document.getElementById('tasksTable');
+      tbody.innerHTML = '';
+
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="padding: 24px; text-align: center; color: var(--text-muted);">No tasks yet. Configure your backend to load data.</td></tr>`;
+        return;
+      }
+
+      data.forEach((item, idx) => {
+        const status = (item.Status || 'todo').toLowerCase();
+        const tr = document.createElement('tr');
+        tr.style.borderBottom = '1px solid var(--border)';
+        tr.innerHTML = `
+          <td style="padding: 12px;">${item.Subject || ''}</td>
+          <td style="padding: 12px;">${item.Topic || ''}</td>
+          <td style="padding: 12px;">
+            <span class="status-badge status-${status}" data-idx="${idx}">${status}</span>
+          </td>
+          <td style="padding: 12px; color: var(--text-secondary);">${item.PlannedDate || '-'}</td>
+          <td style="padding: 12px; color: var(--text-secondary);">${item.EstimatedHours || '-'}</td>
+          <td style="padding: 12px; color: var(--text-secondary); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.Notes || '-'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Add click handlers for status badges
+      document.querySelectorAll('.status-badge').forEach(badge => {
+        badge.addEventListener('click', handleStatusToggle);
+      });
+    }
+
+    function renderTodaysTasks() {
+      const container = document.getElementById('taskWidgetContent');
+      const tasks = getTodaysTasks();
+
+      if (tasks.length === 0) {
+        container.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 16px;">No tasks for today! 🎉</div>';
+        return;
+      }
+
+      container.innerHTML = '';
+      tasks.forEach((task, idx) => {
+        const status = (task.Status || 'todo').toLowerCase();
+        const done = status === 'done';
+
+        const div = document.createElement('div');
+        div.style.cssText = 'padding: 12px; background: var(--bg-secondary); border-radius: 8px; display: flex; align-items: start; gap: 12px;';
+        div.innerHTML = `
+          <input type="checkbox" ${done ? 'checked' : ''} data-subject="${task.Subject}" data-topic="${task.Topic}" style="margin-top: 4px; cursor: pointer;">
+          <div style="flex: 1;">
+            <div style="font-weight: 600; font-size: 14px; ${done ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${task.Subject} - ${task.Topic}</div>
+            <div style="color: var(--text-muted); font-size: 12px; margin-top: 2px;">${task.EstimatedHours || '?'} hours • ${task.Notes || 'No notes'}</div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+
+      // Add checkbox handlers
+      container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', handleTaskCheckbox);
+      });
+    }
+
+    function renderCharts(subjects) {
+      const labels = Object.keys(subjects);
+      const doneCounts = labels.map(l => subjects[l].done);
+      const totalCounts = labels.map(l => subjects[l].total);
+      const percentages = labels.map((l, i) =>
+        totalCounts[i] > 0 ? Math.round((doneCounts[i] / totalCounts[i]) * 100) : 0
+      );
+
+      // Pie Chart
+      const pieCtx = document.getElementById('pieChart');
+      if (charts.pie) charts.pie.destroy();
+      charts.pie = new Chart(pieCtx, {
+        type: 'doughnut',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: percentages,
+            backgroundColor: [
+              '#8b5cf6', '#ec4899', '#10b981', '#f59e0b', '#3b82f6',
+              '#ef4444', '#06b6d4', '#84cc16', '#f97316', '#a855f7'
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() }
+            },
+            tooltip: {
+              callbacks: {
+                label: (context) => `${context.label}: ${context.parsed}% complete`
+              }
+            }
+          }
+        }
+      });
+
+      // Bar Chart
+      const barCtx = document.getElementById('barChart');
+      if (charts.bar) charts.bar.destroy();
+      charts.bar = new Chart(barCtx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: '% Completed',
+            data: percentages,
+            backgroundColor: 'rgba(139, 92, 246, 0.8)',
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() },
+              grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--border').trim() }
+            },
+            x: {
+              ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() },
+              grid: { display: false }
+            }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+
+      // Weekly Chart
+      const weeklyCtx = document.getElementById('weeklyChart');
+      if (charts.weekly) charts.weekly.destroy();
+      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      const weeklyData = days.map(() => Math.round(Math.random() * 30 + 50));
+      charts.weekly = new Chart(weeklyCtx, {
+        type: 'line',
+        data: {
+          labels: days,
+          datasets: [{
+            label: 'Daily Progress %',
+            data: weeklyData,
+            borderColor: '#8b5cf6',
+            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+            fill: true,
+            tension: 0.4,
+            borderWidth: 3,
+            pointRadius: 5,
+            pointBackgroundColor: '#8b5cf6'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() },
+              grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--border').trim() }
+            },
+            x: {
+              ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() },
+              grid: { display: false }
+            }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    // =========================
+    // Event Handlers
+    // =========================
+    async function handleStatusToggle(e) {
+      const idx = parseInt(e.target.dataset.idx);
+      const statusOrder = ['todo', 'inprogress', 'done'];
+      const current = (data[idx].Status || 'todo').toLowerCase();
+      const nextIdx = (statusOrder.indexOf(current) + 1) % statusOrder.length;
+      const next = statusOrder[nextIdx];
+
+      data[idx].Status = next;
+      saveLocal(data);
+      refreshUI();
+
+      // Sync to backend
+      if (APPS_ENDPOINT) {
+        try {
+          await fetch(APPS_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'updateStatus',
+              payload: {
+                Subject: data[idx].Subject,
+                Topic: data[idx].Topic,
+                Status: data[idx].Status
+              }
+            })
+          });
+        } catch (err) {
+          console.warn('Failed to sync status:', err);
+        }
+      }
+    }
+
+    async function handleTaskCheckbox(e) {
+      const subject = e.target.dataset.subject;
+      const topic = e.target.dataset.topic;
+      const checked = e.target.checked;
+
+      const idx = data.findIndex(item => item.Subject === subject && item.Topic === topic);
+      if (idx === -1) return;
+
+      data[idx].Status = checked ? 'done' : 'todo';
+      saveLocal(data);
+      refreshUI();
+
+      if (APPS_ENDPOINT) {
+        try {
+          await fetch(APPS_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'updateStatus',
+              payload: {
+                Subject: data[idx].Subject,
+                Topic: data[idx].Topic,
+                Status: data[idx].Status
+              }
+            })
+          });
+        } catch (err) {
+          console.warn('Failed to sync status:', err);
+        }
+      }
+    }
+
+    // =========================
+    // Backend Integration
+    // =========================
+    function loadSavedEndpoint() {
+      const saved = localStorage.getItem('gate_apps_endpoint');
+      if (saved) {
+        document.getElementById('appsUrl').value = saved;
+        APPS_ENDPOINT = saved;
+      }
+    }
+
+    async function testEndpoint() {
+      if (!APPS_ENDPOINT) {
+        alert('Please save an endpoint first');
+        return;
+      }
+
+      try {
+        const btn = document.getElementById('testEndpoint');
+        btn.textContent = 'Testing...';
+        btn.classList.add('loading');
+
+        const response = await fetch(APPS_ENDPOINT);
+        const json = await response.json();
+
+        if (Array.isArray(json) && json.length > 0) {
+          rawData = json;
+          data = rawData.slice();
+          saveLocal(data);
+          refreshUI();
+          alert(`Success! Loaded ${json.length} tasks from Apps Script`);
+        } else {
+          alert('Connected but no data found. Make sure your sheet has data.');
+        }
+
+        btn.textContent = 'Test';
+        btn.classList.remove('loading');
+      } catch (err) {
+        alert('Failed to connect: ' + err.message);
+        document.getElementById('testEndpoint').textContent = 'Test';
+        document.getElementById('testEndpoint').classList.remove('loading');
+      }
+    }
+
+    async function loadFromCSV() {
+      const url = document.getElementById('csvUrl').value.trim();
+      if (!url) {
+        alert('Please enter a CSV URL');
+        return;
+      }
+
+      try {
+        const btn = document.getElementById('loadCsv');
+        btn.textContent = 'Loading...';
+        btn.classList.add('loading');
+
+        const response = await fetch(url);
+        const text = await response.text();
+        const parsed = parseCSV(text);
+
+        if (parsed.length > 0) {
+          rawData = parsed;
+          data = rawData.slice();
+          saveLocal(data);
+          refreshUI();
+          alert(`Loaded ${parsed.length} tasks from CSV`);
+        } else {
+          alert('No data found in CSV');
+        }
+
+        btn.textContent = 'Load from CSV';
+        btn.classList.remove('loading');
+      } catch (err) {
+        alert('Failed to load CSV: ' + err.message);
+        document.getElementById('loadCsv').textContent = 'Load from CSV';
+        document.getElementById('loadCsv').classList.remove('loading');
+      }
+    }
+
+    // =========================
+    // Settings & Utils
+    // =========================
+    function openSettings() {
+      document.getElementById('settingsDrawer').classList.add('open');
+      document.getElementById('overlay').classList.add('show');
+    }
+
+    function closeSettings() {
+      document.getElementById('settingsDrawer').classList.remove('open');
+      document.getElementById('overlay').classList.remove('show');
+    }
+
+    function toggleCollapsible(id) {
+      const content = document.getElementById(id);
+      const chevron = document.getElementById(id + 'Chevron');
+      content.classList.toggle('open');
+      chevron.classList.toggle('rotate');
+    }
+
+    function toggleTaskWidget() {
+      const widget = document.getElementById('taskWidget');
+      const chevron = document.getElementById('taskWidgetChevron');
+      widget.classList.toggle('minimized');
+      chevron.classList.toggle('rotate');
+    }
+
+    function downloadCSV() {
+      if (data.length === 0) {
+        alert('No data to download');
+        return;
+      }
+
+      const keys = Object.keys(data[0]);
+      const csv = [
+        keys.join(','),
+        ...data.map(row => keys.map(k => `"${(row[k] || '').replace(/"/g, '""')}"`).join(','))
+      ].join('\n');
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'gate_tracker_export.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function resetData() {
+      if (confirm('Are you sure? This will clear all local data.')) {
+        localStorage.removeItem('gate_tracker_data');
+        rawData = [];
+        data = [];
+        refreshUI();
+        alert('Data cleared');
+      }
+    }
+
+    // =========================
+    // Event Listeners Setup
+    // =========================
+    function initializeEventListeners() {
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+      document.getElementById('settingsBtn').addEventListener('click', openSettings);
+      document.getElementById('overlay').addEventListener('click', closeSettings);
+
+      document.getElementById('saveEndpoint').addEventListener('click', () => {
+        const url = document.getElementById('appsUrl').value.trim();
+        if (url) {
+          APPS_ENDPOINT = url;
+          localStorage.setItem('gate_apps_endpoint', url);
+          alert('Endpoint saved!');
+        }
+      });
+
+      document.getElementById('testEndpoint').addEventListener('click', testEndpoint);
+      document.getElementById('loadCsv').addEventListener('click', loadFromCSV);
+
+      document.getElementById('saveUsernames').addEventListener('click', () => {
+        const gh = document.getElementById('githubUsername').value.trim();
+        const lc = document.getElementById('leetcodeUsername').value.trim();
+
+        if (gh) localStorage.setItem('username_github', gh);
+        if (lc) localStorage.setItem('username_leetcode', lc);
+
+        loadStreaks();
+        alert('Usernames saved!');
+      });
+
+      document.getElementById('downloadCsv').addEventListener('click', downloadCSV);
+      document.getElementById('resetBtn').addEventListener('click', resetData);
+
+      // Load saved usernames
+      const savedGh = localStorage.getItem('username_github') || '';
+      const savedLc = localStorage.getItem('username_leetcode') || '';
+      document.getElementById('githubUsername').value = savedGh;
+      document.getElementById('leetcodeUsername').value = savedLc;
+    }
+  </script>
 </body>
+
 </html>
