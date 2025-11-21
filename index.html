@@ -21,6 +21,7 @@
       --success: #10b981;
       --warning: #f59e0b;
       --danger: #ef4444;
+      --streak-color: #FB8C00;
       --border: rgba(0, 0, 0, 0.06);
       --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
       --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
@@ -759,15 +760,15 @@
       // Colors & Theme Configuration
       const isDark = theme === 'dark';
       const themeParam = isDark ? 'dark' : 'light';
-      const accentColor = '8b5cf6';
+      const accentColor = '#FB8C00';
 
       // GitHub Heatmap Background
-      const bgHex = isDark ? '16213e' : 'ffffff';
+      const bgHex = isDark ? '56D364' : 'ffffff';
 
       // --- GitHub Logic ---
       if (gh) {
         // 1. Streak Stats
-        ghStreakImg.src = `https://streak-stats.demolab.com?user=${gh}&theme=${themeParam}&hide_border=true&background=transparent&fire=eb4444&ring=${accentColor}&currStreakLabel=${accentColor}`;
+        ghStreakImg.src = `https://streak-stats.demolab.com?user=${gh}&theme=${themeParam}&hide_border=true&background=transparent&fire=FB8C00&ring=${accentColor}&currStreakLabel=${accentColor}`;
         ghStreakImg.parentElement.style.display = 'flex';
 
         // 2. Heatmap (Now Full Width)
