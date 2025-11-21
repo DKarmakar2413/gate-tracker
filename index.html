@@ -460,7 +460,7 @@
       </div>
 
       <!-- Coding Streaks -->
-      <div class="card mb-6 animate-fade-in" style="animation-delay: 0.55s;">
+      <!-- <div class="card mb-6 animate-fade-in" style="animation-delay: 0.55s;">
         <div class="collapsible-header" onclick="toggleCollapsible('streaksSection')">
           <h3 class="section-header" style="margin: 0;">🔥 Coding Streaks</h3>
           <span class="chevron" id="streaksSectionChevron">▼</span>
@@ -475,6 +475,54 @@
               <h4 style="color: var(--text-secondary); margin-bottom: 12px; font-weight: 600;">LeetCode Stats</h4>
               <img id="leetcodeStatsImg" alt="LeetCode stats"
                 style="min-height: 150px; background: var(--bg-secondary);">
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- Coding Streaks -->
+      <div class="card mb-6 animate-fade-in" style="animation-delay: 0.55s;">
+        <div class="collapsible-header" onclick="toggleCollapsible('streaksSection')">
+          <h3 class="section-header" style="margin: 0;">🔥 Coding Streaks</h3>
+          <span class="chevron" id="streaksSectionChevron">▼</span>
+        </div>
+        <div class="collapsible-content open" id="streaksSection">
+          <div class="p-6 space-y-8">
+            <!-- GitHub Section -->
+            <div>
+              <h4 style="color: var(--text-primary); margin-bottom: 16px; font-weight: 700; font-size: 16px;">📊 GitHub
+                Activity</h4>
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="streak-card">
+                  <h5 style="color: var(--text-secondary); margin-bottom: 12px; font-weight: 600; font-size: 14px;">Streak
+                    Stats</h5>
+                  <img id="githubStreakImg" alt="GitHub streak" style="min-height: 150px; background: var(--bg-secondary);">
+                </div>
+                <div class="streak-card">
+                  <h5 style="color: var(--text-secondary); margin-bottom: 12px; font-weight: 600; font-size: 14px;">Activity
+                    Heatmap</h5>
+                  <img id="githubHeatmapImg" alt="GitHub heatmap" style="min-height: 150px; background: var(--bg-secondary);">
+                </div>
+              </div>
+            </div>
+      
+            <!-- LeetCode Section -->
+            <div>
+              <h4 style="color: var(--text-primary); margin-bottom: 16px; font-weight: 700; font-size: 16px;">💻 LeetCode
+                Activity</h4>
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="streak-card">
+                  <h5 style="color: var(--text-secondary); margin-bottom: 12px; font-weight: 600; font-size: 14px;">Stats Card
+                  </h5>
+                  <img id="leetcodeStatsImg" alt="LeetCode stats" style="min-height: 150px; background: var(--bg-secondary);">
+                </div>
+                <div class="streak-card">
+                  <h5 style="color: var(--text-secondary); margin-bottom: 12px; font-weight: 600; font-size: 14px;">Activity
+                    Heatmap</h5>
+                  <img id="leetcodeHeatmapImg" alt="LeetCode heatmap"
+                    style="min-height: 150px; background: var(--bg-secondary);">
+                </div>
+              </div>
             </div>
           </div>
         </div>
