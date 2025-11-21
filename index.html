@@ -397,7 +397,7 @@
       opacity: 0.95;
     }
 
-    
+
 
 
     scrollbar-width: thin;
@@ -718,11 +718,17 @@
     }
 
     function toggleTheme() {
+      console.log('Theme toggler clicked');
       const current = document.documentElement.getAttribute('data-theme') || 'dark';
       const next = current === 'dark' ? 'light' : 'dark';
+
+      // 1. Update the Theme
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('gate_theme', next);
       document.getElementById('themeIcon').textContent = next === 'dark' ? '🌙' : '☀️';
+
+      // 2. Reload the Streak Charts immediately with new colors
+      loadStreaks();
     }
 
     // =========================
@@ -755,7 +761,7 @@
       const ghStreakImg = document.getElementById('githubStreakImg');
       const ghHeatmapImg = document.getElementById('githubHeatmapImg');
       const lcStatsImg = document.getElementById('leetcodeStatsImg');
-      const lcActivityImg = document.getElementById('leetcodeActivityImg');
+      // const lcActivityImg = document.getElementById('leetcodeActivityImg');
 
       // Colors & Theme Configuration
       const isDark = theme === 'dark';
@@ -788,11 +794,11 @@
         // 2. Language/Skill Breakdown (CHANGED API)
         // This uses 'leetcode-stats-six' which shows distinct bar charts
         // This prevents the "duplicate card" look
-        lcActivityImg.src = `https://leetcode-stats-six.vercel.app/api?username=${lc}&theme=${themeParam}&hide=ranking`;
-        lcActivityImg.parentElement.style.display = 'flex';
+        // lcActivityImg.src = `https://leetcode-stats-six.vercel.app/api?username=${lc}&theme=${themeParam}&hide=ranking`;
+        // lcActivityImg.parentElement.style.display = 'flex';
       } else {
         lcStatsImg.parentElement.style.display = 'none';
-        lcActivityImg.parentElement.style.display = 'none';
+        // lcActivityImg.parentElement.style.display = 'none';
       }
     }
     // Refresh charts when theme toggles
@@ -800,13 +806,6 @@
       setTimeout(loadStreaks, 100);
     });
 
-
-
-    // Add listener to update charts when theme toggles
-    document.getElementById('themeToggle').addEventListener('click', () => {
-      // Small timeout to allow theme attribute to update
-      setTimeout(loadStreaks, 100);
-    });
     function saveLocal(data) {
       try {
         localStorage.setItem('gate_tracker_data', JSON.stringify(data));
